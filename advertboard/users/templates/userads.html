@@ -1,0 +1,98 @@
+{% extends "default.html" %}
+
+{% block content %}
+<h2>Обявления пользователя {{request.user.username}}</h2>
+<hr>
+<div>
+
+    {% for i in page_obj %}
+    <div class="card">
+        <div class="card-header">
+            {{ i.time_create}}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ i.head | title }}</h5>
+
+            <p class="card-text">
+                {{i.content_upload | truncatewords:20 | safe}} ...
+            </p>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'adsdetail' pk=i.pk %}" class="btn btn-primary btn-sm">Читать полностью</a>
+            <!-- accordion trigger -->
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapse{{ i.pk }}" aria-expanded="false"
+                aria-controls="flush-collapse{{ i.pk }}">
+                Посмотреть отклики
+            </button>
+            <a href="{% url 'adsupdate' pk=i.pk %}" class="btn btn-secondary btn-sm">Редактировать</a>
+            <a href="{% url 'adsdelete' pk=i.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+            <p></p>
+            <!-- accordion-->
+            <div class="accordion accordion-flush" id="comments{{ i.pk }}">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{ i.pk }}">
+
+                    </h2>
+                    <div id="flush-collapse{{ i.pk }}" class="accordion-collapse collapse"
+                        aria-labelledby="flush-heading{{ i.pk }}" data-bs-parent="#comments{{ i.pk }}">
+                        {% for r in responses %}
+                        {% if r.advert.id == i.pk %}
+                        <div class="accordion-body">
+                            <div class="card text-bg-light mb-3" style="max-width: 150rem;">
+                                <div class="card-header">{{ r.time_create }}</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Отклик отправил пользователь {{ r.user.username }} </h5>
+                                    <p class="card-text">{{ r.text }}</p>
+                                    <p></p>
+                                    {% if not r.acceptresponse %}
+
+                                    <form action="{% url 'acceptresponse'%}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="respid" value="{{ r.pk }}">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Принять отклик">
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <p></p>
+                        {% endif %}
+                        {% endfor%}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p></p>
+
+    {% endfor%}
+
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">Первая страница</a>
+        </li>
+        {% if page_obj.previous_page_number != 1 %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a>
+        </li>
+        {% endif %}
+        {% endif %}
+        <li class="page-item disabled"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a>
+        </li>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+        <li class="page-item">
+            <a class="page-link" href="?page= {{ page_obj.paginator.num_pages }}">Последняя страница</a>
+        </li>
+        {% endif %}
+        {% endif %}
+    </ul>
+</div>
+
+<a href="{% url 'userprofile' %}" class="btn btn-primary btn-sm">Вернуться в профиль</a>
+{%endblock content%}

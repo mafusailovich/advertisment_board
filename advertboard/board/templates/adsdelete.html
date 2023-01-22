@@ -1,0 +1,9 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Вы действительно хотите удалить объявление "{{ object.head }}"?</p>
+    <input type="submit" value="Подтверждаю удаление" />
+</form>
+{% endblock content %}

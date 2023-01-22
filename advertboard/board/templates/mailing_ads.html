@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рассылка объявлений</title>
+</head>
+<body>
+    <h2>Здравствуйте. Рассылка объявлений.</h2>
+
+    <table>
+        <tr>
+            <td>Время создания, пользователь</td>
+            <td>Заголовок</td>
+            <td>Краткое содержание</td>
+            <td>Ссылка на объявление</td>
+        </tr>
+        {% for i in ads%}
+        <tr>
+            <td><p>{{ i.time_create }},user {{ i.username }}</p></td>
+            <td><h5 class="card-title">{{ i.head | title }}</h5></td>
+            <td>
+                {% autoescape off %}
+                {{i.content | truncatewords:20}} ...
+                {% endautoescape %}
+            </td>
+            <td><p><a href="http://127.0.0.1:8000/{{ i.pk }}">Читать полностью</a></p></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% extends "default.html" %}
+
+{% load users_tags %}
+
+{% block content %}
+<h2>Мои отклики</h2>
+<hr>
+<div>
+  <form action="" method="get">
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Поиск" />
+
+  </form>
+  {% for i in page_obj %}
+  <div class="card text-bg-light mb-3" style="max-width: 150rem;">
+    <div class="card-header">{{ i.time_create }}, автор {{ i.user}}</div>
+    <div class="card-body">
+      <h6 class="card-title">Отклик на объявление {{ i.advert }}</h6>
+      <p class="card-text"> {{ i.text }}</p>
+      <p>
+      <span><a href="{% url 'respdelete' pk=i.pk %}" class="btn btn-danger btn-sm">Удалить отклик</a></span>
+      {% if i.acceptresponse %}
+      <span><button type="button" class="btn btn-info btn-sm">Отклик принят</button></span>
+      {% else %}
+
+      <form action="{% url 'acceptresponse'%}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="respid" value="{{ i.pk }}">
+        <input type="submit" class="btn btn-primary btn-sm" value="Принять отклик">
+      </form>
+
+      {% endif %}
+    </p>
+    </div>
+  </div>
+  {% endfor %}
+
+
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?{% url_replace page=1 %}">Первая страница</a>
+    </li>
+    {% if page_obj.previous_page_number != 1 %}
+    <li class="page-item">
+      <a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+    </li>
+    {% endif %}
+    {% endif %}
+    <li class="page-item disabled"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+    </li>
+    {% if paginator.num_pages != page_obj.next_page_number %}
+    <li class="page-item">
+      <a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">Последняя страница</a>
+    </li>
+    {% endif %}
+    {% endif %}
+  </ul>
+
+</div>
+
+<div><a href="{% url 'userprofile' %}" class="btn btn-primary btn-sm">Вернуться в профиль</a></div>
+{%endblock content%}

@@ -1,0 +1,23 @@
+{% extends 'default.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block content %}
+<p></p>
+<div class="card">
+    <div class="card-header">
+        {{ ads.time_create}}, категория {{ ads.category }}, автор {{ ads.user.username}}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ ads.head | title }}</h5>
+
+        <p class="card-text">
+            {{ads.content_upload | safe}}
+        </p>
+        
+    </div>
+</div>
+
+{% endblock content %}

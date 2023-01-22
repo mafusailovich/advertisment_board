@@ -1,0 +1,32 @@
+{% extends "default.html" %}
+
+{% block content %}
+<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
+<hr>
+<div>
+    <h3>Вам доступны следующие возможности</h3>
+
+    <div>
+        <p><a class="btn btn-primary btn-sm" href={% url 'userads' %}>Мои объявления</a> Просматривайте ваши объявления
+            и редактируйте их </p>
+    </div>
+    <div>
+        <p><a href={% url 'userresp' %} class="btn btn-primary btn-sm">Мои отклики</a> Просматривайте ваши
+            отклики и принимайте их</p>
+    </div>
+    <div>
+        <p><a href={% url 'adscreate' %} class="btn btn-primary btn-sm">Создать объявление</a> Создайте новое объявление</p>
+    </div>
+    {% if mailuser %}
+    <div>
+        <p><a href={% url 'mailing' %} class="btn btn-primary btn-sm">Создать рассылку</a> Создайте рассылку</p>
+    </div>
+    {% endif %}
+    <div>
+        <p><a href={% url 'account_set_password' %} class="btn btn-primary btn-sm">Изменить пароль</a> Создайте новый пароль для входа</p>
+    </div>
+    <div>
+        <p><a href={% url 'account_logout' %} class="btn btn-primary btn-sm">Выйти</a> Выход с сайта</p>
+    </div>
+</div>
+{%endblock content%}

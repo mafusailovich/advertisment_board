@@ -1,0 +1,105 @@
+{% extends 'default.html' %}
+
+{% load board_tags %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+
+{% block content %}
+<div>
+
+    {% for i in page_obj %}
+    <p></p>
+    <div class="card">
+        <div class="card-header">
+            {{ i.time_create }}, категория {{ i.category }}, автор {{ i.user.username }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ i.head | title }}</h5>
+
+            <p class="card-text">
+                {{i.content_upload | truncatewords:20 | safe}} ...
+            </p>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <a href="{% url 'adsdetail' pk=i.pk %}" class="btn btn-primary btn-sm">Читать полностью</a>
+
+                <!-- Button trigger modal -->
+                {% if request.user.is_authenticated and request.user.id != i.user.id %}
+                <!-- подключаем дополнительный тэг для получения информации о том, оставлял ли пользователь отклик-->
+                {% user_comments_exist user_id=request.user.id ads_id=i.pk as adsresp %}
+                {% if adsresp %}
+                <button type="button" class="btn btn-info btn-sm">
+                    Вы уже оставляли отклик
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop{{i.pk}}">
+                    Оставить отклик
+                </button>
+            </p>
+
+
+            {% endif %}
+
+            {% endif %}
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop{{i.pk}}" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Напишите текст отклика ниже</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form action="/savecomment/" method="post">
+                                {% csrf_token %}
+                                {{ form.as_div}}
+                                <input type="hidden" name="advid" value="{{ i.pk }}">
+                                <input type="submit" class="btn btn-primary btn-sm" value="Сохранить отклик">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p></p>
+
+    {% endfor%}
+
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">Первая страница</a>
+        </li>
+        {% if page_obj.previous_page_number != 1 %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number}}">{{ page_obj.previous_page_number }}</a>
+        </li>
+        {% endif %}
+        {% endif %}
+        <li class="page-item disabled"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number}}">{{ page_obj.next_page_number }}</a>
+        </li>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+        <li class="page-item">
+            <a class="page-link" href="?page= {{ page_obj.paginator.num_pages }}">Последняя страница</a>
+        </li>
+        {% endif %}
+        {% endif %}
+    </ul>
+</div>
+
+
+{% endblock content %}

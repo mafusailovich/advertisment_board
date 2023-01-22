@@ -1,0 +1,85 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+{% if not mailuser%}
+<p></p>
+<div class="form-control">
+    <p>Уважаемый {{ request.user }}, к сожалению ваши права не предполагают создание рассылок.</p>
+</div>
+{% else %}
+<p></p>
+<div class="form-control">
+    <p>Выберите тип рассылки.</p>
+    <p>Если вам нужно отправить информационное сообщение, то выберите "Рассылка информационных сообщений".
+        Вы можете выбрать пользователей, которым будете отправлять сообщение и написать сообщение и заголовок. Остальные
+        поля не будут задействованы.
+    </p>
+    <p>Если вам нужно сделать рассылку новых объявлений, то выберите "Рассылка объявлений". Будут активны: поле выбора
+        категорий,
+        поле выбора пользователей, поле выбора даты (будут выбраны статьи созданные и обновленные с выбранной даты по
+        сегодняшнюю дату). </p>
+</div>
+<p></p>
+<form method="POST">
+    {% csrf_token%}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        {{ form.mailing.errors }}
+        <label for="{{ form.mailing.id_for_label }}" class="form-label">Выберите тип рассылки</label>
+        <div class="form-control">
+            {{ form.mailing }}
+        </div>
+        <div id="emailHelp" class="form-text">Выберите тип рассылки (если это рассылка информационных сообщений, то
+            следует запонять толко заголовок и сообщение)</div>
+        <div class="mb-3">
+            {{ form.mailing.errors }}
+            <label for="{{ form.head.id_for_label }}" class="form-label">Заголовок информационного сообщения</label>
+            <div class="form-control">
+                {{ form.head }}
+            </div>
+            <div id="emailHelp" class="form-text">Заполните зоголовок</div>
+        </div>
+        <div class="mb-3">
+            {{ form.text.errors }}
+            <label for="{{ form.text.id_for_label }}" class="form-label">Сообщение</label>
+            <div class="form-control">
+                {{ form.text }}
+            </div>
+            <div id="emailHelp" class="form-text">Введите текст сообщения здесь. В редакторе вы можете форматировать
+                текст на ваше усмотрение. Форматирование
+                сохранится в письме.
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form.category.errors }}
+            <label for="{{ form.category.id_for_label }}" class="form-label">Категория</label>
+            <div class="form-control">
+                {{ form.category }}
+            </div>
+            <div id="emailHelp" class="form-text">Выберите одну или несколько категорий (для множественного выбора
+                удерживайте зажатой клавишу Ctrl)</div>
+        </div>
+        <div class="mb-3">
+            {{ form.user.errors }}
+            <label for="{{ form.user.id_for_label }}" class="form-label">Пользователи</label>
+            <div class="form-control">
+                {{ form.user }}
+            </div>
+            <div id="emailHelp" class="form-text">Выберите одного или несколько пользователей (если не выбрать ничего,
+                то рассылка будет всем пользователям)</div>
+        </div>
+
+        <div class="mb-3">
+            {{ form.date.errors }}
+            <label for="{{ form.date.id_for_label }}" class="form-label">Выбор даты</label>
+            <div class="form-control" style="display: flex;">
+                {{ form.date}}
+            </div>
+            <div id="emailHelp" class="form-text">Выбор даты, c которой будет рассылка (если не выбрано, то объявления
+                будут собраны за неделю)</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+</form>
+{% endif %}
+{% endblock content %}
