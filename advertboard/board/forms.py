@@ -53,7 +53,7 @@ class MailForm(forms.Form):
     head = forms.CharField(min_length=5, required=False)
     text = RichTextUploadingFormField(required=False)
     category = forms.MultipleChoiceField(choices=CATEGORY,required=False)
-    user = forms.MultipleChoiceField(choices=UCHOISE, required=False)
+    user = forms.MultipleChoiceField(widget=forms.MultipleChoiceField   choices=UCHOISE, required=False)
     date = forms.DateField(widget=forms.SelectDateWidget(attrs={'class':'form-select','style':'max-width:10%'}), required=False)
 
     def send_email(self):

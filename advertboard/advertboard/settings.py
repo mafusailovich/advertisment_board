@@ -26,7 +26,7 @@ SECRET_KEY = config['KEY']#'django-insecure-^63rh(i7rcgdw@w+)i-la2b)6the-wk=xc-v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1','secure.nch.com.au']
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'board.apps.BoardConfig',
     'users.apps.UsersConfig',
     'django_filters',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -153,6 +154,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'upload'
+
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True

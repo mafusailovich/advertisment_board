@@ -1,0 +1,37 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: '0.1'
+paths:
+  /ads/:
+    get:
+      operationId: listAds
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ads'
+          description: ''
+      tags:
+      - ads
+components:
+  schemas:
+    Ads:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        head:
+          type: string
+          maxLength: 255
+        url:
+          type: string
+          readOnly: true
+      required:
+      - head

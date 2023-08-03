@@ -17,6 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework import routers
+from board.views import AdsViewRest
+
+
+
 
 
 urlpatterns = [
@@ -26,4 +31,5 @@ urlpatterns = [
     path('', include('board.urls')),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('api/v1/adslist/', AdsViewRest.as_view() )
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

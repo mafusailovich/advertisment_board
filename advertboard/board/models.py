@@ -1,7 +1,6 @@
 from django.db import models
 # импорт поля для хранения всякого разного содержимого
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.contrib.auth.models import User
 from django.urls import reverse
 
 # Create your models here.

@@ -8,8 +8,33 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from .filters import RespFilter
+from rest_framework.response import Response
+from rest_framework import permissions
+from rest_framework.views import APIView
+from .serializers import AdsSerializer
+from django.forms.models import model_to_dict
+
 
 # Create your views here.
+
+class AdsViewRest(APIView):
+    def get(self, request):
+        ads = Advertisment.objects.all()
+        return Response({'ads': AdsSerializer(ads, many=True).data })
+
+    def post(self, request):
+        serializer = AdsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        ads_new = Advertisment.objects.create(
+            head=request.data['head'],
+            content_upload=request.data['content'],
+            category=request.data['category'],
+            user=User.objects.get(pk=request.data['user'])
+        )
+
+        return Response({'post': AdsSerializer(ads_new).data})
+
 
 class AdsList(ListView):
     model = Advertisment
@@ -79,6 +104,12 @@ class MailingCreate(LoginRequiredMixin, FormView):
         # It should return an HttpResponse.
         form.send_email()
         return super().form_valid(form)
+
+
+
+
+
+
 
 #функция записывает в базу отклики на объявления
 @login_required

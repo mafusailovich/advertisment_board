@@ -41,7 +41,7 @@ class RespView(LoginRequiredMixin, ListView):
     ordering = '-time_create'
     context_object_name = 'resp'
 
-    paginate_by = 5
+    paginate_by = 1
 
     def get_queryset(self):
         #чтобы показывать только отклики на статьи пользователя нужен другой запрос
